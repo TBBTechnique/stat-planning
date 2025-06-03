@@ -1,0 +1,43 @@
+import os
+import httpx
+from typing import List, Dict
+
+RENTMAN_API_URL = "https://api.rentman.net/functions"
+RENTMAN_TOKEN = os.getenv("RENTMAN_TOKEN")
+
+HEADERS = {
+    "Authorization": f"Bearer {RENTMAN_TOKEN}",
+    "Content-Type": "application/json"
+}
+
+async def fetch_heures_planifiees() -> List[Dict]:
+    payload = {
+        "module": "functions",
+        "action": "read",
+        "parameters": {
+            "filter": {
+                "type": "planned"
+            },
+            "fields": ["date", "employe_id", "duree_h"]
+        }
+    }
+    async with httpx.AsyncClient() as client:
+        response = await client.post(RENTMAN_API_URL, json=payload, headers=HEADERS)
+        response.raise_for_status()
+        return response.json().get("data", [])
+
+async def fetch_heures_effectuees() -> List[Dict]:
+    payload = {
+        "module": "functions",
+        "action": "read",
+        "parameters": {
+            "filter": {
+                "type": "done"
+            },
+            "fields": ["date", "employe_id", "duree_h"]
+        }
+    }
+    async with httpx.AsyncClient() as client:
+        response = await client.post(RENTMAN_API_URL, json=payload, headers=HEADERS)
+        response.raise_for_status()
+        return response.json().get("data", [])
