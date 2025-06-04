@@ -45,3 +45,7 @@ async def fetch_heures_effectuees() -> List[Dict]:
         response = await client.post(RENTMAN_API_URL, json=payload, headers=HEADERS)
         response.raise_for_status()
         return response.json().get("data", [])
+
+async def fetch_crew_data() -> List[Dict]:
+    # À compléter selon tes besoins — par défaut retourne une liste vide
+    return []
