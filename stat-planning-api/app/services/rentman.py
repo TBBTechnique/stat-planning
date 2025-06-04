@@ -12,13 +12,15 @@ HEADERS = {
 
 async def fetch_heures_planifiees() -> List[Dict]:
     payload = {
-        "module": "functions",
         "action": "read",
+        "module": "functions",
         "parameters": {
             "filter": {
-                "type": "planned"
+                "start_time": {
+                    "gte": "2024-01-01T00:00:00Z"
+                }
             },
-            "fields": ["date", "employe_id", "duree_h"]
+            "fields": ["start_time", "end_time", "function_id", "crew_members"]
         }
     }
     async with httpx.AsyncClient() as client:
@@ -28,13 +30,15 @@ async def fetch_heures_planifiees() -> List[Dict]:
 
 async def fetch_heures_effectuees() -> List[Dict]:
     payload = {
-        "module": "functions",
         "action": "read",
+        "module": "functions",
         "parameters": {
             "filter": {
-                "type": "done"
+                "start_time": {
+                    "gte": "2024-01-01T00:00:00Z"
+                }
             },
-            "fields": ["date", "employe_id", "duree_h"]
+            "fields": ["start_time", "end_time", "function_id", "crew_members"]
         }
     }
     async with httpx.AsyncClient() as client:
