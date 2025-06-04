@@ -1,16 +1,26 @@
 from fastapi import FastAPI
-from app.routes import membres, planning, stats, heures, alertes, parametres
+from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="Statistiques de Planification API")
+from app.routes import membres, planning, stats, heures, alertes, parametres, test
 
-# Include routers
-app.include_router(membres.router, prefix="/membres")
-app.include_router(planning.router, prefix="/planning")
-app.include_router(stats.router, prefix="/stats")
-app.include_router(heures.router, prefix="/heures")
-app.include_router(alertes.router, prefix="/alertes")
-app.include_router(parametres.router, prefix="/parametres")
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(membres.router)
+app.include_router(planning.router)
+app.include_router(stats.router)
+app.include_router(heures.router)
+app.include_router(alertes.router)
+app.include_router(parametres.router)
+app.include_router(test.router)
 
 @app.get("/")
-def read_root():
-    return {"message": "Bienvenue dans l'API Statistiques de Planification"}
+async def root():
+    return {"message": "Stat Planning API en ligne"}
